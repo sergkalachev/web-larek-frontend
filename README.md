@@ -40,3 +40,17 @@ npm run build
 ```
 yarn build
 ```
+
+## Описание данных и типов данных проекта
+Исходя из макета и данных в Json можно описать данные следующим образом:
+# Продукт
+```
+interface Product {
+    id: string;
+    description: string;
+    image: string;
+    title: string;
+    category: category;
+    price: number | null;
+}
+```
