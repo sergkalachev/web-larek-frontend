@@ -1,5 +1,9 @@
+// модуль реализован по аналогии с проктом ono-tebe-nado
+
+import {IEvents} from "./events";
+
 /**
- * Базовый компонент из проекта ono-tebe-nado
+ * Базовый компонент
  */
 export abstract class Component<T> {
     protected constructor(protected readonly container: HTMLElement) {

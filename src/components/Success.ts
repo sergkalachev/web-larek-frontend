@@ -1,30 +1,22 @@
-import { Component } from './base/Components';
-import { ensureElement } from '../utils/utils';
-import { IOrder } from '../types';
+import { ISuccess, ISuccesssAction } from "../types";
+import { ensureElement, formatNumber } from "../utils/utils";
+import { Component } from "./base/Components";
 
-interface ISuccessActions {
-	onClick: () => void;
-}
+export class Success extends Component<ISuccess> {
+  protected _total: HTMLElement;
+  protected _buttonClose: HTMLButtonElement;
 
-export class Success extends Component<Partial<IOrder>> {
-	protected _total: HTMLElement;
-	protected _successButton: HTMLButtonElement;
+  constructor(container: HTMLElement, actions: ISuccesssAction) {
+    super(container);
 
-	constructor(protected container: HTMLElement, actions: ISuccessActions) {
-		super(container);
+    this._buttonClose = ensureElement<HTMLButtonElement>('.order-success__close', container);
+    this._total = ensureElement<HTMLElement>('.order-success__description', container);
 
-		this._total = ensureElement('.order-success__description', this.container);
-		this._successButton = ensureElement<HTMLButtonElement>(
-			'.order-success__close',
-			this.container
-		);
-
-		if (actions?.onClick) {
-			this._successButton.addEventListener('click', actions.onClick);
-		}
-	}
-
-	set total(total: number) {
-		this.setText(this._total, `Списано ${total} синапсов`);
-	}
+    if (actions?.onClick) {
+      this._buttonClose.addEventListener('click', actions.onClick);
+    }
+  }
+  set total(value: number) {
+    this.setText(this._total, `Списано ${formatNumber(value)} синапсов`);
+  }
 }

@@ -1,3 +1,5 @@
+// модуль реализован по аналогии с проктом ono-tebe-nado
+
 import {IEvents} from "./events";
 
 // Гарда для проверки на модель
@@ -18,4 +20,6 @@ export abstract class Model<T> {
         // Состав данных можно модифицировать
         this.events.emit(event, payload ?? {});
     }
+
+    // далее можно добавить общие методы для моделей
 }

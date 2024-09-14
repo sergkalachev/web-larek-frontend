@@ -1,45 +1,31 @@
-import { Form } from './common/Form';
-import { IOrderForm } from './../types';
-import { IEvents } from './base/events';
-import { ensureAllElements } from './../utils/utils';
+import { Form } from "./common/Form";
+import { IOrderForm } from "../types";
+import { IEvents } from "./base/events";
+import { ensureAllElements } from "../utils/utils";
+
 
 export class Order extends Form<IOrderForm> {
-	protected _paymentButtons: HTMLButtonElement[];
+    protected _buttonsSelectPaymentMethod: HTMLButtonElement[];
+    protected _address: HTMLInputElement;
+    constructor(container: HTMLFormElement, events: IEvents) {
+        super(container, events);
 
-	constructor(protected container: HTMLFormElement, protected events: IEvents) {
-		super(container, events);
+        this._buttonsSelectPaymentMethod = ensureAllElements<HTMLButtonElement>('.button_alt', container);
+        this._buttonsSelectPaymentMethod.forEach((button) => {
+            button.addEventListener('click', () => {
+                this.buttonState(button.name);
+                this.events.emit(`${this.container.name}.payment:change`, { field: 'payment', value: button.name });            });
+        })      
+    }
 
-		this._paymentButtons = ensureAllElements('.button_alt', this.container);
+    buttonState(name: string) {
+        this._buttonsSelectPaymentMethod.forEach(button => {
+          this.toggleClass(button, 'button_alt-active', button.name === name);
+          this.setDisabled(button, button.name === name);
+        })
+      }
 
-		this._paymentButtons.forEach((button) => {
-			button.addEventListener('click', (evt) => {
-				const target = evt.target as HTMLButtonElement;
-				const field = 'payment';
-				const value = target.name as keyof IOrderForm;
-				this.onPaymentChange(value, field);
-				if (!target.classList.contains('button_alt-active')) {
-					this.selected = value;
-				}
-			});
-		});
-	}
-
-	protected onPaymentChange(value: string, field: keyof IOrderForm) {
-		this.events.emit(`${this.container.name}.${field}:change`, {
-			field,
-			value,
-		});
-	}
-
-	set selected(name: string) {
-		this._paymentButtons.forEach((button) => {
-			this.toggleClass(button, 'button_alt-active', button.name === name);
-			this.setDisabled(button, button.name === name);
-		});
-	}
-
-	set address(value: string) {
-		(this.container.elements.namedItem('address') as HTMLInputElement).value =
-			value;
-	}
+      set address(value: string) {
+        (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+    }
 }
