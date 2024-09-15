@@ -29,11 +29,13 @@ export class Basket extends Component<IBasketView> {
 
     set items(items: HTMLElement[]) {
         if (items.length) {
+            this.setDisabled(this._button, false); //показываем кнопку оформления заказа
             this._list.replaceChildren(...items);
         } else {
             this._list.replaceChildren(createElement<HTMLParagraphElement>('p', {
                 textContent: 'Корзина пуста'
             }));
+            this.setDisabled(this._button, true); //блокируем кнопку оформления заказа
         }
     }
 
